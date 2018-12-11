@@ -2,6 +2,7 @@ pipeline{
 	environment{
 		scannerHome = tool 'Scanner';
 		slackMet = load("slackNotifications.groovy");
+		qg = waitForQualityGate();
 	}
 
 	agent any
@@ -21,8 +22,7 @@ pipeline{
 	  }
 	  stage("SonarQube Quality Gate") { 
 		steps{
-			timeout(time: 2, unit: 'MINUTES') { 
-			   def qg = waitForQualityGate() 
+			timeout(time: 2, unit: 'MINUTES') {  
 			   if(qg.status == "ERROR"){
 				echo "Failed Quality Gates";
 				slackMet.afterQG(qg.status);
