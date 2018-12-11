@@ -26,20 +26,9 @@ pipeline{
 		}
 		steps{
 			echo "SonaQube Quality Gate"
-			script{
-			   timeout(time: 2, unit: 'MINUTES') {  
-				   if(qg.status == "ERROR"){
-					echo "Failed Quality Gates";
-					slackMet.afterQG(qg.status);
-					error "Pipeline aborted due to quality gate failure: ${qg.status}"
-					waitForQualityGate abortPipeline: true
-				   }
-				   if (qg.status == 'OK') {
-					 echo "Passed Quality Gates!";
-					 slackMet.afterQG(qg.status);
-				   }
-			   }
-			}
+		    timeout(time: 2, unit: 'MINUTES') {  
+				waitForQualityGate abortPipeline: true
+		    }
 		}
 	  }
 	  stage("Pushing to Cloud"){
