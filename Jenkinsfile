@@ -26,9 +26,9 @@ pipeline{
 		    timeout(time: 2, unit: 'MINUTES') {  
 				waitForQualityGate abortPipeline: true
 		    }
-
+			script{
 				slackMet.call("SUCCESS");
-
+			}
 			//slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has passed the Quality Gates!"
 		}
 	  }
