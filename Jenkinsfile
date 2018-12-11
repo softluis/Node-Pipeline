@@ -2,7 +2,6 @@ pipeline{
 	environment{
 		scannerHome = tool 'Scanner';
 		slackMet = load("slackNotifications.groovy");
-		qg = waitForQualityGate();
 	}
 
 	agent any
@@ -22,6 +21,9 @@ pipeline{
 		}
 	  }
 	  stage("SonarQube Quality Gate") { 
+		environment{
+			qg = waitForQualityGate();
+		}
 		steps{
 			echo "SonaQube Quality Gate"
 			timeout(time: 2, unit: 'MINUTES') {  
