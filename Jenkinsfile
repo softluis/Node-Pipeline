@@ -23,15 +23,17 @@ pipeline{
 	  stage("SonarQube Quality Gate") { 
 		steps{
 			timeout(time: 2, unit: 'MINUTES') {  
-			   if(qg.status == "ERROR"){
-				echo "Failed Quality Gates";
-				slackMet.afterQG(qg.status);
-				error "Pipeline aborted due to quality gate failure: ${qg.status}"
-				waitForQualityGate abortPipeline: true
-			   }
-			   if (qg.status == 'OK') {
-				 echo "Passed Quality Gates!";
-				 slackMet.afterQG(qg.status);
+			   script{
+				   if(qg.status == "ERROR"){
+					echo "Failed Quality Gates";
+					slackMet.afterQG(qg.status);
+					error "Pipeline aborted due to quality gate failure: ${qg.status}"
+					waitForQualityGate abortPipeline: true
+				   }
+				   if (qg.status == 'OK') {
+					 echo "Passed Quality Gates!";
+					 slackMet.afterQG(qg.status);
+				   }
 			   }
 			}
 		}
@@ -51,13 +53,15 @@ pipeline{
 	  stage("Check App Status"){
 		steps{
 			echo "Checking if the App is live..."
-			try{
-				bat "curl -s --head  --request GET https://node-softinsa-app.eu-gb.mybluemix.net/ | grep '200 OK'"
-				echo "The app is up and running!"
-				slackMet.isRunning("Running");
-			}catch(e){
-				echo "The app is down..."
-				slackMet.isRunning("NotRunning");
+			script{
+				try{
+					bat "curl -s --head  --request GET https://node-softinsa-app.eu-gb.mybluemix.net/ | grep '200 OK'"
+					echo "The app is up and running!"
+					slackMet.isRunning("Running");
+				}catch(e){
+					echo "The app is down..."
+					slackMet.isRunning("NotRunning");
+				}
 			}
 		}
 	  }
