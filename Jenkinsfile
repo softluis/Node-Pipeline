@@ -53,10 +53,10 @@ pipeline{
 				try{
 					bat "curl -s --head  --request GET https://node-softinsa-app.eu-gb.mybluemix.net/ | grep '200 OK'"
 					echo "The app is up and running!"
-					slackMet.isRunning("Running");
+					//slackMet.isRunning("Running");
 				}catch(e){
 					echo "The app is down..."
-					slackMet.isRunning("NotRunning");
+					//slackMet.isRunning("NotRunning");
 				}
 			}
 		}
