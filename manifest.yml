@@ -1,0 +1,5 @@
+---
+applications:
+ - name: node-softinsa-app
+   random-route: true
+   memory: 64M
