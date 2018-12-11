@@ -49,6 +49,10 @@ app.post("/api/visitors", function (request, response) {
  * @return An array of all the visitor names
  */
 app.get("/api/visitors", function (request, response) {
+	var a = 'som';
+	if(a !== 'something'){
+		var b = 10;
+	}
   var names = [];
   if(!mydb) {
     response.json(names);
