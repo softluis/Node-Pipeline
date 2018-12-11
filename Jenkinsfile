@@ -26,7 +26,6 @@ pipeline{
 		}
 		steps{
 			echo "SonaQube Quality Gate"
-			echo qg.status
 			script{
 			   timeout(time: 2, unit: 'MINUTES') {  
 					echo "Chegou"
