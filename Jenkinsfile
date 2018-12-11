@@ -1,6 +1,7 @@
 pipeline{
 	environment{
 		scannerHome = tool 'Scanner';
+		slackMet = load("slackNotifications.groovy");
 	}
 
 	agent any
@@ -46,9 +47,6 @@ pipeline{
 		}
 	  }
 	  stage("Check App Status"){
-		environment{
-			slackMet = load("slackNotifications.groovy");
-		}
 		steps{
 			echo "Checking if the App is live..."
 			script{
