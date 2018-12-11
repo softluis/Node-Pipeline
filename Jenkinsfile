@@ -27,8 +27,9 @@ pipeline{
 		steps{
 			echo "SonaQube Quality Gate"
 			echo qg.status
+			script{
 			timeout(time: 2, unit: 'MINUTES') {  
-			   script{
+			   
 				   if(qg.status == "ERROR"){
 					echo "Failed Quality Gates";
 					slackMet.afterQG(qg.status);
