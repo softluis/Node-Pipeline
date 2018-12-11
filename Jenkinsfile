@@ -1,7 +1,7 @@
 node {
 	try{
 	  stage('SCM') {
-		git 'https://github.com/ricardo-softinsa/get-started-node.git'
+		git 'https://github.com/ricardo-softinsa/Node-Pipeline.git'
 	  }
 	  stage('SonarQube analysis') {
 		def scannerHome = tool 'Scanner';
