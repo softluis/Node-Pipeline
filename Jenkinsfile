@@ -47,7 +47,9 @@ pipeline{
 				cloudSpace: 'dev',
 				credentialsId: 'CFPush',
 			)
-			slackMet.call(currentBuild.currentResult);
+			script{
+				slackMet.call(currentBuild.currentResult);
+			}
 		}
 	  }
 	  stage("Check App Status"){
