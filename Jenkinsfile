@@ -64,16 +64,16 @@ pipeline{
 			slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} was successful!"
 		}
 		unstable{
-			slackSend color: "purple", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} is unstable!"
+			slackSend color: "#b300b3", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} is unstable!"
 		}
 		failure{
 			slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has failed..."
 		}
 		aborted{
-			slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has aborted..."
+			slackSend color: "#000000", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has aborted..."
 		}
 		changed{
-			slackSend color: "orange", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has changed since last build."
+			slackSend color: "#ff9900", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has changed since last build."
 		}
 	}
 }
