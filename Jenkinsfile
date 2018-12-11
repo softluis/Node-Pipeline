@@ -1,4 +1,9 @@
 pipeline{
+	environment{
+		scannerHome = tool 'Scanner';
+		slackMet = load("slackNotifications.groovy");
+	}
+
 	agent any
 	
 	stages{
@@ -9,7 +14,6 @@ pipeline{
 	  }
 	  stage('SonarQube analysis') {
 		steps{
-			def scannerHome = tool 'Scanner';
 			withSonarQubeEnv('SonarServer') {
 			  bat "\"${scannerHome}/bin/sonar-scanner\""
 			}
@@ -17,7 +21,6 @@ pipeline{
 	  }
 	  stage("SonarQube Quality Gate") { 
 		steps{
-			def slackMet = load("slackNotifications.groovy");
 			timeout(time: 2, unit: 'MINUTES') { 
 			   def qg = waitForQualityGate() 
 			   if(qg.status == "ERROR"){
@@ -35,7 +38,6 @@ pipeline{
 	  }
 	  stage("Pushing to Cloud"){
 		steps{
-			def slackMet = load("slackNotifications.groovy");
 			echo "Pushing into the cloud...";
 			cfPush(
 				target: 'api.eu-gb.bluemix.net',
@@ -44,12 +46,11 @@ pipeline{
 				credentialsId: 'CFPush',
 			)
 			slackMet.call(currentBuild.currentResult);
-			}
+		}
 	  }
 	  stage("Check App Status"){
 		steps{
 			echo "Checking if the App is live..."
-			def slackMet = load("slackNotifications.groovy");
 			try{
 				bat "curl -s --head  --request GET https://node-softinsa-app.eu-gb.mybluemix.net/ | grep '200 OK'"
 				echo "The app is up and running!"
