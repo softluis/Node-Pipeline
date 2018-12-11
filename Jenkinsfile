@@ -1,7 +1,9 @@
 pipeline{
 	environment{
 		scannerHome = tool 'Scanner';
-		slackMet = load("slackNotifications.groovy");
+		script{
+			slackMet = load("slackNotifications.groovy");
+		}
 	}
 
 	agent any
@@ -26,7 +28,8 @@ pipeline{
 		    timeout(time: 2, unit: 'MINUTES') {  
 				waitForQualityGate abortPipeline: true
 		    }
-			slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has passed the Quality Gates!"
+			slackMet.call(currentBuild.currentResult)
+			//slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has passed the Quality Gates!"
 		}
 	  }
 	  stage("Pushing to Cloud"){
