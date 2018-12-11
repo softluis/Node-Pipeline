@@ -40,10 +40,6 @@ pipeline{
 				cloudSpace: 'dev',
 				credentialsId: 'CFPush',
 			)
-			script{
-				echo currentBuild.currentResult
-				//slackMet.call(currentBuild.currentResult);
-			}
 		}
 	  }
 	  stage("Check App Status"){
@@ -53,10 +49,10 @@ pipeline{
 				try{
 					bat "curl -s --head  --request GET https://node-softinsa-app.eu-gb.mybluemix.net/ | grep '200 OK'"
 					echo "The app is up and running!"
-					//slackMet.isRunning("Running");
+					slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} - Your app is up and running!"
 				}catch(e){
 					echo "The app is down..."
-					//slackMet.isRunning("NotRunning");
+					slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} - Your app is down..."
 				}
 			}
 		}
@@ -74,6 +70,9 @@ pipeline{
 		}
 		failure{
 			slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has failed..."
+		}
+		aborted{
+			slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has aborted..."
 		}
 		changed{
 			slackSend color: "orange", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has changed since last build."
