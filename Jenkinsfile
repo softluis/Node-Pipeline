@@ -62,4 +62,21 @@ pipeline{
 		}
 	  }
 	}
+	post{
+		always{
+			echo "This executes always..."
+		}
+		success{
+			slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} was successful!"
+		}
+		unstable{
+			slackSend color: "purple", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} is unstable!"
+		}
+		failure{
+			slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has failed..."
+		}
+		changed{
+			slackSend color: "orange", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has changed since last build."
+		}
+	}
 }
