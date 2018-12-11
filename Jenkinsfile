@@ -15,6 +15,7 @@ pipeline{
 	  }
 	  stage('SonarQube analysis') {
 		steps{
+			echo "SonarQube analisys"
 			withSonarQubeEnv('SonarServer') {
 			  bat "\"${scannerHome}/bin/sonar-scanner\""
 			}
@@ -22,6 +23,7 @@ pipeline{
 	  }
 	  stage("SonarQube Quality Gate") { 
 		steps{
+			echo "SonaQube Quality Gate"
 			timeout(time: 2, unit: 'MINUTES') {  
 			   script{
 				   if(qg.status == "ERROR"){
