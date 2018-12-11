@@ -57,9 +57,6 @@ pipeline{
 	  }
 	}
 	post{
-		always{
-			echo "This executes always..."
-		}
 		success{
 			slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} was successful!"
 		}
