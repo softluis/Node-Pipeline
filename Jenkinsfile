@@ -26,7 +26,7 @@ pipeline{
 		}
 		steps{
 			echo "SonaQube Quality Gate"
-			echo qg
+			echo qg.status()
 			timeout(time: 2, unit: 'MINUTES') {  
 			   script{
 				   if(qg.status == "ERROR"){
