@@ -14,7 +14,7 @@ pipeline{
 	  }
 	  stage('SonarQube analysis') {
 		steps{
-			echo "SonarQube analisys"
+			echo "SonarQube analysis"
 			withSonarQubeEnv('SonarServer') {
 			  bat "\"${scannerHome}/bin/sonar-scanner\""
 			}
@@ -28,7 +28,16 @@ pipeline{
 			echo "SonaQube Quality Gate"
 			script{
 			   timeout(time: 2, unit: 'MINUTES') {  
-					echo "Chegou"
+				   if(qg.status == "ERROR"){
+					echo "Failed Quality Gates";
+					slackMet.afterQG(qg.status);
+					error "Pipeline aborted due to quality gate failure: ${qg.status}"
+					waitForQualityGate abortPipeline: true
+				   }
+				   if (qg.status == 'OK') {
+					 echo "Passed Quality Gates!";
+					 slackMet.afterQG(qg.status);
+				   }
 			   }
 			}
 		}
