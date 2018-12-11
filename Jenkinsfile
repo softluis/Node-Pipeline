@@ -41,7 +41,8 @@ pipeline{
 				credentialsId: 'CFPush',
 			)
 			script{
-				slackMet.call(currentBuild.currentResult);
+				echo currentBuild.currentResult
+				//slackMet.call(currentBuild.currentResult);
 			}
 		}
 	  }
