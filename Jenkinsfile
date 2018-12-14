@@ -36,7 +36,7 @@ pipeline{
 				 target: 'api.eu-gb.bluemix.net',
 				 organization: 'luis.filipe.pereira@pt.softinsa.com',
 				  cloudSpace: 'dev',
-				  credentialsId: 'imbcloud'
+				  credentialsId: 'imbcloud',
 			)
 		}
 	  }
