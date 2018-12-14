@@ -27,7 +27,6 @@ pipeline{
 		    timeout(time: 1, unit: 'MINUTES') {  
 				waitForQualityGate abortPipeline: true
 		    }
-		    //slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has passed the Quality Gates!"
 		}
 	  }
 	  stage("Pushing to Cloud"){
@@ -64,19 +63,19 @@ pipeline{
 		}
 		unstable{
 			echo "something"
-			//slackSend color: "#b300b3", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} is unstable!"
+			slackSend color: "#b300b3", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} is unstable!"
 		}
 		failure{
 			echo "something"
-			//slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has failed..."
+			slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has failed..."
 		}
 		aborted{
 			echo "something"
-			//slackSend color: "#000000", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has aborted..."
+			slackSend color: "#000000", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has aborted..."
 		}
 		changed{
 			echo "something"
-			//slackSend color: "#ff9900", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has changed since last build."
+			slackSend color: "#ff9900", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has changed since last build."
 		}
 	}
 }
