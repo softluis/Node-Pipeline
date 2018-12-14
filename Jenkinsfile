@@ -59,6 +59,7 @@ pipeline{
 	post{
 		success{
 			echo "something"
+			slackSend "Something"
 			//slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} was successful!"
 		}
 		unstable{
