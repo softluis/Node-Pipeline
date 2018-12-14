@@ -9,7 +9,7 @@ pipeline{
 	stages{
 	  stage('SCM') {
 		steps{
-			git 'https://github.com/ricardo-softinsa/Node-Pipeline.git'
+			git 'https://github.com/softluis/get-started-node.git'
 		}
 	  }
 	  stage('SonarQube analysis') {
@@ -33,10 +33,10 @@ pipeline{
 		steps{
 			echo "Pushing into the cloud...";
 			cfPush(
-				target: 'api.eu-gb.bluemix.net',
-				organization: 'ricardo.miguel.magalhaes@pt.softinsa.com',
-				cloudSpace: 'dev',
-				credentialsId: 'CFPush',
+				 target: 'api.eu-gb.bluemix.net',
+				 organization: 'luis.filipe.pereira@pt.softinsa.com',
+				  cloudSpace: 'dev',
+				  credentialsId: 'imbcloud'
 			)
 		}
 	  }
