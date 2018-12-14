@@ -1,81 +1,57 @@
-pipeline{
-	environment{
-		scannerHome = tool 'Scanner';
-		slackMet = load 'slackNotifications.groovy';
-	}
+pipeline {
+    environment {
+      scannerHome = tool 'Scanner'
+   }
+ agent any
+ stages {
+  stage('Download Repository') {
+   steps {
+    git 'https://github.com/softluis/Node-Pipeline.git'
+   }
+  }
+  stage('Sonarqube') {
+  
+   steps {
+    withSonarQubeEnv('SonarServer') {
+     sh "\"${scannerHome}/bin/sonar-scanner\""
+    }
+    sleep 5
+   }
+  }
+  
+  stage("Quality Gate") {
+   steps {
+    script {
+     timeout(time: 1, unit: 'MINUTES') {
+      def qg = waitForQualityGate()
+      if (qg.status == "ERROR") {
+       echo "Failed Quality Gates";
+       waitForQualityGate abortPipeline: true
+      }
+      if (qg.status == 'OK') {
+       echo "Passed Quality Gates!";
+      }
+     }
+    }
+   }
+  }
+  stage("Push IMB Cloud") {
+   steps {
+    echo 'Pushing to cloud'
+    cfPush(
+     target: 'api.eu-gb.bluemix.net',
+     organization: 'luis.filipe.pereira@pt.softinsa.com',
+     cloudSpace: 'dev',
+     credentialsId: 'imbcloud',
+    )
+   }
+  }
+ }
+ post {
+  always {
+   slackSend color: "good", message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n Site Softinsa \n More info at: ${env.BUILD_URL}"
 
-	agent any
-	
-	stages{
-	  stage('SCM') {
-		steps{
-			git 'https://github.com/softluis/Node-Pipeline.git'
-		}
-	  }
-	  stage('SonarQube analysis') {
-		steps{
-			echo "SonarQube analysis"
-			withSonarQubeEnv('SonarServer') {
-			  sh "\"${scannerHome}/bin/sonar-scanner\""
-			}
-			sleep 5
-		}
-	  }
-	  stage("SonarQube Quality Gate") { 
-		steps{
-			echo "SonaQube Quality Gate"
-		    timeout(time: 1, unit: 'MINUTES') {  
-				waitForQualityGate abortPipeline: true
-		    }
-		}
-	  }
-	  stage("Pushing to Cloud"){
-		steps{
-			echo "Pushing into the cloud...";
-			cfPush(
-				 target: 'api.eu-gb.bluemix.net',
-				 organization: 'luis.filipe.pereira@pt.softinsa.com',
-				  cloudSpace: 'dev',
-				  credentialsId: 'imbcloud',
-			)
-		}
-	  }
-	  stage("Check App Status"){
-		steps{
-			echo "Checking if the App is live..."
-			script{
-				try{
-					sh "curl -s --head  --request GET https://node-softinsa-app.eu-gb.mybluemix.net/ | grep '200 OK'"
-					echo "The app is up and running!"
-					slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} - Your app is up and running!"
-				}catch(e){
-					echo "The app is down..."
-					slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} - Your app is down..."
-				}
-			}
-		}
-	  }
-	}
-	post{
-		success{
-			echo "something"
-			slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} was successful!"
-		}
-		unstable{
-			echo "something"
-			slackSend color: "#b300b3", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} is unstable!"
-		}
-		failure{
-			echo "something"
-			slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has failed..."
-		}
-		aborted{
-			echo "something"
-			slackSend color: "#000000", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has aborted..."
-		}
-		changed{
-			echo "something"
-			slackSend color: "#ff9900", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has changed since last build."
-		}
-	}
+  }
+ }
+
 }
