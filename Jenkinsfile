@@ -26,7 +26,7 @@ pipeline{
 		    timeout(time: 2, unit: 'MINUTES') {  
 				waitForQualityGate abortPipeline: true
 		    }
-		    slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has passed the Quality Gates!"
+		    //slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has passed the Quality Gates!"
 		}
 	  }
 	  stage("Pushing to Cloud"){
@@ -47,10 +47,10 @@ pipeline{
 				try{
 					bat "curl -s --head  --request GET https://node-softinsa-app.eu-gb.mybluemix.net/ | grep '200 OK'"
 					echo "The app is up and running!"
-					slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} - Your app is up and running!"
+					//slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} - Your app is up and running!"
 				}catch(e){
 					echo "The app is down..."
-					slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} - Your app is down..."
+					//slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} - Your app is down..."
 				}
 			}
 		}
@@ -58,19 +58,19 @@ pipeline{
 	}
 	post{
 		success{
-			slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} was successful!"
+			//slackSend color: "good", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} was successful!"
 		}
 		unstable{
-			slackSend color: "#b300b3", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} is unstable!"
+			//slackSend color: "#b300b3", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} is unstable!"
 		}
 		failure{
-			slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has failed..."
+			//slackSend color: "danger", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has failed..."
 		}
 		aborted{
-			slackSend color: "#000000", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has aborted..."
+			//slackSend color: "#000000", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has aborted..."
 		}
 		changed{
-			slackSend color: "#ff9900", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has changed since last build."
+			//slackSend color: "#ff9900", message: "${env.JOB_NAME} #${env.BUILD_NUMBER} has changed since last build."
 		}
 	}
 }
